@@ -1,0 +1,55 @@
+@use "config/_font";
+
+$base-color: #27282c;
+$base-font-size: 16px;
+$base-line-height: 1.5;
+$base-link-color: #7f52ff;
+$base-link-hover-color: #6d44dc;
+
+html,
+button,
+input,
+select,
+textarea {
+  font-family: font.$font-family-sans-serif;
+}
+
+pre,
+code,
+var,
+kbd,
+samp {
+  font-family: font.$font-family-mono;
+}
+
+html {
+  height: 100%;
+  margin: 0 auto;
+}
+
+body {
+  height: 100%;
+  color: $base-color;
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+  background-color: #fff;
+}
+
+a {
+  color: $base-link-color;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: $base-link-hover-color;
+}
+
+.hidden {
+  display: none !important;
+}
+
+:root {
+  --rs-color-primary-light-theme: var(--ktl-color-primary-light-theme);
+  --rs-color-primary-t-dim-light-theme: rgba(127, 82, 255, 0.8);
+  --rs-font-family-ui: var(--ktl-font-family-inter);
+}

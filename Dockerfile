@@ -1,22 +1,22 @@
-FROM python:3.6
+FROM node:20-alpine AS development-dependencies-env
+COPY . /app
+WORKDIR /app
+RUN npm ci
 
-RUN apt-get update && \
-    apt-get install -y build-essential ruby
+FROM node:20-alpine AS production-dependencies-env
+COPY ./package.json package-lock.json /app/
+WORKDIR /app
+RUN npm ci --omit=dev
 
-# see markdown.py for kramdown version
-RUN gem install kramdown -v 1.14.0
+FROM node:20-alpine AS build-env
+COPY . /app/
+COPY --from=development-dependencies-env /app/node_modules /app/node_modules
+WORKDIR /app
+RUN npm run build
 
-COPY requirements.txt /tmp
-RUN pip install -r /tmp/requirements.txt
-
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs
-RUN corepack enable
-
-# Install node dependencies for KTL components (react-renderer)
-COPY package.json yarn.lock /src/
-WORKDIR /src
-RUN yarn install
-
-EXPOSE 8080
-ENTRYPOINT ["python", "/src/kotlin-website.py"]
+FROM node:20-alpine
+COPY ./package.json package-lock.json /app/
+COPY --from=production-dependencies-env /app/node_modules /app/node_modules
+COPY --from=build-env /app/build /app/build
+WORKDIR /app
+CMD ["npm", "run", "start"]

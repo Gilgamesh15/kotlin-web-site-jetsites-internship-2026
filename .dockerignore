@@ -1,4 +1,4 @@
-**
-!requirements.txt
-!package.json
-!yarn.lock
+.react-router
+build
+node_modules
+README.md
